@@ -1,0 +1,49 @@
+﻿@page "/tasks"
+@using Taskmaster.Services
+@inject HttpClient Http
+@inject ITaskmasterApi taskmasterApi
+
+<PageTitle>Tasks</PageTitle>
+
+<h1>Tasks</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+@if (tasks == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Assignee</th>
+                <th>Due</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var task in tasks)
+            {
+                <tr>
+                    <td>@task.ID</td>
+                    <td>@task.Name</td>
+                    <td>Assignee</td>
+                    <td>Due date</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<TaskmasterModels.Task>? tasks;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // tasks = await Http.GetAsync<List<TaskmasterMode ls.Task>>("https://localhost:44332/tasks");
+        tasks = await taskmasterApi.GetTasks();
+    }
+}
