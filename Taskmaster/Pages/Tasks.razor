@@ -43,7 +43,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        // tasks = await Http.GetAsync<List<TaskmasterMode ls.Task>>("https://localhost:44332/tasks");
         tasks = await taskmasterApi.GetTasks();
     }
 }

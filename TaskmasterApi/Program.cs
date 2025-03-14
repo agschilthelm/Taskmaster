@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using TaskmasterApi;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -16,6 +19,17 @@ builder.Services.AddCors(options =>
         .AllowAnyHeader();
     });
 });
+
+string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+if (connectionString != null)
+{
+    string password = "taskmaster";
+    connectionString += $"password={password}";
+    builder.Services.AddDbContext<TaskmasterDbContext>(options =>
+    {
+        options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+    });
+}
 
 var app = builder.Build();
 
