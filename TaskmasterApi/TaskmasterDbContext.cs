@@ -9,11 +9,10 @@ namespace TaskmasterApi
 
         }
 
-        //public TaskmasterDbContext(DbContextOptions options) : base(options)
-        //{
-
-        //}
-
+        public DbSet<TaskmasterModels.Category> Categories { get; set; }
         public DbSet<TaskmasterModels.Task> Tasks { get; set; }
+        public DbSet<TaskmasterModels.Household> Households { get; set; }
+        public DbSet<TaskmasterModels.Member> Members { get; set; }
+        public DbSet<TaskmasterModels.TaskHistory> TaskHistories { get; set; }
     }
 }

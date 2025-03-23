@@ -1,0 +1,56 @@
+﻿@inherits BaseComponent
+@using Taskmaster.Services
+@inject ITaskmasterApi taskmasterApi
+@inject NavigationManager navigationManager
+@page "/tasks/task/{TaskId:int?}"
+
+<h3>Edit Task</h3>
+<EditForm Model=@task OnSubmit=@Submit FormName="TaskForm">
+    <label for="task-name-input">Name:</label>
+    <InputText @bind-Value="task.Name" class="form-control" placeholder="Enter name" />
+    <br />
+    <label for="Assignee">Assignee:</label>
+    <InputSelect @bind-value="task.MemberId" class="form-select">
+        <option value="">No Assignee</option>
+        @foreach (var member in members)
+        {
+            <option value="@member.ID">@member.Name</option>
+        }
+    </InputSelect>
+
+    <br />
+    <div style="text-align: center">
+        <button class="btn btn-success" type="submit">
+            <i class="bi bi-house-check-fill"></i>
+            Save
+        </button>
+    </div>
+</EditForm>
+
+@code {
+    public TaskmasterModels.Task task { get; set; } = new();
+    private List<TaskmasterModels.Member> members { get; set; } = new();
+
+    [Parameter]
+    public int? TaskId { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (TaskId.HasValue)
+        {
+            task = await taskmasterApi.GetTask(TaskId.Value);
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        members = await taskmasterApi.GetMembers(CurrentMember.HouseholdId);
+    }
+
+    private void Submit()
+    {
+        // Save the task
+        navigationManager.NavigateTo("/tasks");
+    }
+}

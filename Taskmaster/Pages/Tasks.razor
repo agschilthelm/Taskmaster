@@ -1,13 +1,19 @@
-﻿@page "/tasks"
+﻿@inherits BaseComponent
+@page "/tasks"
 @using Taskmaster.Services
+
 @inject HttpClient Http
 @inject ITaskmasterApi taskmasterApi
+@inject NavigationManager _nav
 
 <PageTitle>Tasks</PageTitle>
-
-<h1>Tasks</h1>
-
-<p>This component demonstrates fetching data from the server.</p>
+<div style="display: flex;">
+    <h1>Tasks</h1>
+    <button id="create-task-btn" class="btn btn-primary" @onclick="AddTaskBtnClicked">
+        <i class="bi bi-house-add-fill"></i>
+        Add Task
+    </button>
+</div>
 
 @if (tasks == null)
 {
@@ -22,6 +28,7 @@ else
                 <th>Name</th>
                 <th>Assignee</th>
                 <th>Due</th>
+                <th>Done</th>
             </tr>
         </thead>
         <tbody>
@@ -32,6 +39,9 @@ else
                     <td>@task.Name</td>
                     <td>Assignee</td>
                     <td>Due date</td>
+                    <td style="text-align: center;">
+                        <input type="checkbox" checked="@task.IsComplete" @onchange="(e) => CompleteCbValueChanged(e)" />
+                    </td>
                 </tr>
             }
         </tbody>
@@ -43,6 +53,19 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        tasks = await taskmasterApi.GetTasks();
+        await base.OnInitializedAsync();
+        tasks = await taskmasterApi.GetHouseholdTasks(CurrentMember.HouseholdId);
     }
+
+    public void CompleteCbValueChanged(ChangeEventArgs e)
+    {
+
+        string s = "";
+    }
+
+    private void AddTaskBtnClicked()
+    {
+        _nav.NavigateTo("/tasks/task");
+    }
+
 }

@@ -15,5 +15,7 @@ builder.Services.AddRefitClient<ITaskmasterApi>(new RefitSettings
     ContentSerializer = new SystemTextJsonContentSerializer(TaskmasterSettings.GetJsonSerializerOptions())
 }).ConfigureHttpClient(c => c.BaseAddress = new Uri("https://localhost:44332"));
 
+//builder.Services.AddSessionStorageServices();
+
 
 await builder.Build().RunAsync();

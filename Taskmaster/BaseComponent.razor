@@ -1,0 +1,14 @@
+﻿@using Taskmaster.Services
+@inject ITaskmasterApi taskmasterApi
+
+@code {
+    // [inject] isessionstorageservice sessionstorage { get; set; }
+    public TaskmasterModels.Member CurrentMember { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        int currentUserId = 1;
+        CurrentMember = await taskmasterApi.GetMember(currentUserId);
+    }
+}
+

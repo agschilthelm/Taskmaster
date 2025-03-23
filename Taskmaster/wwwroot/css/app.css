@@ -101,3 +101,8 @@ a, .btn-link {
 code {
     color: #c02d76;
 }
+
+#create-task-btn {
+    float: right;
+    margin-left: auto;
+}

@@ -21,4 +21,17 @@ public class TasksController : ControllerBase
         var tasks = dbContext.Tasks.Where(i => i.HouseholdId == 1).ToList();
         return await Task.FromResult(tasks);
     }
+
+    [HttpGet("{taskId}")]
+    public async Task<TaskmasterModels.Task> GetTask([FromRoute] int taskId)
+    {
+        var task = dbContext.Tasks.Find(taskId);
+        return await Task.FromResult(task);
+    }
+
+    [HttpPost("create")]
+    public async Task CreateTask([FromBody] TaskmasterModels.Task task)
+    {
+
+    }
 }

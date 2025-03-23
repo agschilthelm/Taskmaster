@@ -1,11 +1,13 @@
 ﻿namespace TaskmasterModels
 {
-    public class Household
+    public class Member
     {
         public int ID { get; set; }
         public string Name { get; set; }
 
         public List<Task> Tasks { get; set; }
-        public List<Member> Members { get; set; }
+
+        public int HouseholdId { get; set; }
+        public Household Household { get; set; }
     }
 }
