@@ -111,6 +111,14 @@
             task.Interval = (TaskmasterModels.Task.DateInterval?)dateInterval;
         }
         await taskmasterApi.SaveTask(task.HouseholdId, task);
+        ToastMessage message = new ToastMessage()
+            {
+                Type = ToastType.Success,
+                Title = "Task Created",
+                HelpText = $"{DateTime.Now}",
+                Message = $"Successfully created task: {task.Name}",
+            };
+        AddToastToSession(message);
         navigationManager.NavigateTo("/tasks");
     }
 

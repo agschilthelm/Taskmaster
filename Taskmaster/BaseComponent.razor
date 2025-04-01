@@ -5,15 +5,25 @@
 @code {
     [Inject] protected ToastService ToastService { get; set; } = default!;
 
-    // [inject] isessionstorageservice sessionstorage { get; set; }
-    public TaskmasterModels.Member CurrentMember { get; set; }
+    [Inject] ISessionStorageService SessionStorage { get; set; }
 
-    protected List<ToastMessage> messages = new List<ToastMessage>();
+    public TaskmasterModels.Member CurrentMember { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         int currentUserId = 1;
         CurrentMember = await taskmasterApi.GetMember(currentUserId);
+        // If there are any notifications send them
+        ToastMessage? message = SessionStorage.GetItem<ToastMessage>("notifications");
+        if (message != null)
+        {
+            ToastService.Notify(message);
+        }
+    }
+
+    protected void AddToastToSession(ToastMessage message)
+    {
+        SessionStorage.SetItem("notifications", message);
     }
 
     protected void ShowMessage(ToastType toastType, string messageStr, string? body = null)

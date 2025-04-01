@@ -16,7 +16,7 @@ builder.Services.AddRefitClient<ITaskmasterApi>(new RefitSettings
 }).ConfigureHttpClient(c => c.BaseAddress = new Uri(TaskmasterSettings.ApiUrl));
 
 builder.Services.AddBlazorBootstrap();
-//builder.Services.AddSessionStorageServices();
+builder.Services.AddSessionStorageServices();
 
 
 await builder.Build().RunAsync();
