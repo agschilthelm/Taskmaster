@@ -24,18 +24,16 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>ID</th>
                 <th>Name</th>
                 <th>Assignee</th>
                 <th>Due</th>
-                <th>Done</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var task in tasks)
             {
                 <tr>
-                    <td>@task.ID</td>
                     <td>@task.Name</td>
                     <td>Assignee</td>
                     <td>Due date</td>
@@ -60,11 +58,11 @@ else
     public void CompleteCbValueChanged(ChangeEventArgs e)
     {
 
-        string s = "";
     }
 
     private void AddTaskBtnClicked()
     {
+        // ShowMessage(ToastType.Success, "Test message");
         _nav.NavigateTo("/tasks/task");
     }
 

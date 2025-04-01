@@ -1,12 +1,13 @@
-﻿@inherits LayoutComponentBase
+﻿@inherits BaseComponent
 <div class="page">
     <div class="sidebar">
         <NavMenu />
+        <NavMenuBottom />
     </div>
 
     <main>
+        <Toasts class="p-3" AutoHide="true" Delay="5000" Placement="ToastsPlacement.TopRight" />
         <article class="content px-4">
-         @* <MainLayout /> *@
             @Body
         </article>
     </main>

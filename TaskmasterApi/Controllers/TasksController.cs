@@ -29,9 +29,19 @@ public class TasksController : ControllerBase
         return await Task.FromResult(task);
     }
 
-    [HttpPost("create")]
+    [HttpPost("saveTask")]
     public async Task CreateTask([FromBody] TaskmasterModels.Task task)
     {
+        TaskmasterModels.Task dbTask;
+        if (task.IsNew)
+        {
+            dbTask = new TaskmasterModels.Task();
+            dbTask.HouseholdId = task.HouseholdId;
+        }
+        else
+        {
+            dbTask = dbContext.Tasks.Find(task.ID);
 
+        }
     }
 }

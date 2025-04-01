@@ -35,4 +35,21 @@ public class HouseholdsController : ControllerBase
         var result = dbContext.Tasks.Where(i => i.HouseholdId == householdId).ToList();
         return await Task.FromResult(result);
     }
+
+    [HttpPost("{householdId}/saveTask")]
+    public async Task SaveTask([FromRoute] int householdId, [FromBody] TaskmasterModels.Task task)
+    {
+        if (task.IsNew)
+        {
+            var dbTask = new TaskmasterModels.Task();
+            dbTask.HouseholdId = householdId;
+            dbContext.Tasks.Add(dbTask);
+            dbContext.SaveChanges();
+        }
+        else
+        {
+            var dbTask = dbContext.Tasks.Find(task.ID);
+
+        }
+    }
 }

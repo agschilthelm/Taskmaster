@@ -106,3 +106,16 @@ code {
     float: right;
     margin-left: auto;
 }
+
+#standard-recurrance {
+    display: flex;
+}
+
+.recurrance > * {
+    margin-left: 10px;
+}
+
+.hide {
+    display: none !important;
+    transition: opacity .15s linear;
+}

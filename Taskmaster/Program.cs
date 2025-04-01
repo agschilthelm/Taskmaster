@@ -13,8 +13,9 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddRefitClient<ITaskmasterApi>(new RefitSettings
 {
     ContentSerializer = new SystemTextJsonContentSerializer(TaskmasterSettings.GetJsonSerializerOptions())
-}).ConfigureHttpClient(c => c.BaseAddress = new Uri("https://localhost:44332"));
+}).ConfigureHttpClient(c => c.BaseAddress = new Uri(TaskmasterSettings.ApiUrl));
 
+builder.Services.AddBlazorBootstrap();
 //builder.Services.AddSessionStorageServices();
 
 

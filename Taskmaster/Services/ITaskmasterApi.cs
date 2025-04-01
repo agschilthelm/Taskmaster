@@ -16,6 +16,10 @@ namespace Taskmaster.Services
         [Get("/households/{householdId}/tasks")]
         Task<List<TaskmasterModels.Task>> GetHouseholdTasks(int householdId);
 
+        [Headers("Content-Type: application/json")]
+        [Post("/households/{householdId}/saveTask")]
+        System.Threading.Tasks.Task SaveTask(int householdId, TaskmasterModels.Task task);
+
         [Get("/members/{memberId}")]
         Task<Member> GetMember(int memberId);
     }

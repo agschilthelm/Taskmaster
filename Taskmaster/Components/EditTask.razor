@@ -4,10 +4,10 @@
 @inject NavigationManager navigationManager
 @page "/tasks/task/{TaskId:int?}"
 
-<h3>Edit Task</h3>
+<h3>@(task.IsNew ? "New" : "Edit") Task</h3>
 <EditForm Model=@task OnSubmit=@Submit FormName="TaskForm">
     <label for="task-name-input">Name:</label>
-    <InputText @bind-Value="task.Name" class="form-control" placeholder="Enter name" />
+    <InputText @bind-value="@task.Name" class="form-control" placeholder="Enter name" />
     <br />
     <label for="Assignee">Assignee:</label>
     <InputSelect @bind-value="task.MemberId" class="form-select">
@@ -19,20 +19,69 @@
     </InputSelect>
 
     <br />
+    <DateInput TValue="DateTime?" @bind-value="@task.DueDate" Placeholder="Due Date (optional)" />
+    <br />
+    <div>
+        <Switch Value="recurring" Label="Recurring?" ValueExpression="() => recurring" ValueChanged="SwitchChanged" />
+    </div>
+    <div id="recurring-fields-div" class="fade @(recurring ? "show" : "hide")" >
+        <InputSelect id="recurrance-type" @bind-Value="recurranceType" class="form-select">
+            <option value="">Choose recurrance type</option>
+            @foreach (TaskmasterModels.Task.RecurranceType rt in @Enum.GetValues(typeof(TaskmasterModels.Task.RecurranceType)))
+            {
+                string name = TaskmasterModels.Extensions.GetDisplayName(rt) ?? rt.ToString();
+                <option value="@((int)rt)">@name</option>
+            }
+        </InputSelect>
+        <br />
+        <div id="standard-recurrance" class="recurrance fade @(recurranceType == (int)TaskmasterModels.Task.RecurranceType.Standard ? "show" : "hide")">
+            <span>Repeat every</span>
+            <NumberInput Style="width: 25%;" TValue="int?" @bind-Value="@task.RecurranceQuantity" TextAlignment="Alignment.Center" />
+            <InputSelect style="width: 50%;" id="date-interval" @bind-Value="dateInterval" class="form-select">
+                @foreach (TaskmasterModels.Task.DateInterval interval in @Enum.GetValues(typeof(TaskmasterModels.Task.DateInterval)))
+                {
+                    string name = TaskmasterModels.Extensions.GetDisplayName(interval) ?? interval.ToString();
+                    <option value="@((int)interval)">@($"{name}(s)")</option>
+                }
+            </InputSelect>
+        </div>
+        <div id="weekday-recurrance" class=" recurrance fade @(recurranceType == (int)TaskmasterModels.Task.RecurranceType.DayOfWeek ? "show" : "hide")">
+            <span>Repeat every</span>
+            <InputSelect style="width: 75%;" id="day-of-week" @bind-Value="dayOfWeek" class="form-select">
+                @foreach (DayOfWeek day in @Enum.GetValues(typeof(DayOfWeek)))
+                {
+                    <option value="@((int)day)">@day.ToString()</option>
+                }
+            </InputSelect>
+        </div>
+    </div>
+    <br />
     <div style="text-align: center">
         <button class="btn btn-success" type="submit">
             <i class="bi bi-house-check-fill"></i>
             Save
         </button>
+        <Button Type="ButtonType.Link" Color="ButtonColor.Danger" To="/tasks">
+            <i class="bi bi-x-circle"></i>
+            Cancel
+        </Button>
     </div>
 </EditForm>
 
 @code {
     public TaskmasterModels.Task task { get; set; } = new();
     private List<TaskmasterModels.Member> members { get; set; } = new();
+    private int? recurranceType { get; set; }
+    private int? dateInterval { get; set; }
+    private int? dayOfWeek { get; set; }
+
+    private bool recurring { get; set; } = false;
 
     [Parameter]
     public int? TaskId { get; set; }
+
+    [Parameter]
+    public int HouseholdId { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {
@@ -40,6 +89,9 @@
         {
             task = await taskmasterApi.GetTask(TaskId.Value);
         }
+        recurranceType = (int?)task.RecurranceTypeId;
+        dateInterval = (int?)task.Interval;
+        dayOfWeek = (int?)task.DayOfWeek;
     }
 
     protected override async Task OnInitializedAsync()
@@ -48,9 +100,24 @@
         members = await taskmasterApi.GetMembers(CurrentMember.HouseholdId);
     }
 
-    private void Submit()
+    private async Task Submit()
     {
         // Save the task
+        task.Recurring = recurring;
+        if (recurring)
+        {
+            task.RecurranceTypeId = (TaskmasterModels.Task.RecurranceType?)recurranceType;
+            task.DayOfWeek = (DayOfWeek?)dayOfWeek;
+            task.Interval = (TaskmasterModels.Task.DateInterval?)dateInterval;
+        }
+        await taskmasterApi.SaveTask(task.HouseholdId, task);
         navigationManager.NavigateTo("/tasks");
+    }
+
+    private void SwitchChanged(bool value)
+    {
+        recurring = value;
+        // Default to Standard
+        recurranceType = (int?)task.RecurranceTypeId ?? (int?)TaskmasterModels.Task.RecurranceType.Standard;
     }
 }

@@ -12,5 +12,8 @@ namespace Taskmaster
                 PropertyNameCaseInsensitive = true
             };
         }
+
+        public static string ApiUrl = "https://localhost:44332";
+        //public static string ApiUrl = "https://localhost:45457";
     }
 }

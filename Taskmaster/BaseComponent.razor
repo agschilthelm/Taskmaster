@@ -1,14 +1,31 @@
-﻿@using Taskmaster.Services
+﻿@inherits LayoutComponentBase
+@using Taskmaster.Services
 @inject ITaskmasterApi taskmasterApi
 
 @code {
+    [Inject] protected ToastService ToastService { get; set; } = default!;
+
     // [inject] isessionstorageservice sessionstorage { get; set; }
     public TaskmasterModels.Member CurrentMember { get; set; }
+
+    protected List<ToastMessage> messages = new List<ToastMessage>();
 
     protected override async Task OnInitializedAsync()
     {
         int currentUserId = 1;
         CurrentMember = await taskmasterApi.GetMember(currentUserId);
+    }
+
+    protected void ShowMessage(ToastType toastType, string messageStr, string? body = null)
+    {
+        ToastMessage message = new ToastMessage()
+            {
+                Type = toastType,
+                Title = messageStr,
+                HelpText = $"{DateTime.Now}",
+                Message = body,
+            };
+        ToastService.Notify(message);
     }
 }
 

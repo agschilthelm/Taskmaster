@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaskmasterApi;
 
@@ -11,9 +12,11 @@ using TaskmasterApi;
 namespace TaskmasterApi.Migrations
 {
     [DbContext(typeof(TaskmasterDbContext))]
-    partial class TaskmasterDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250325025240_RecurranceType")]
+    partial class RecurranceType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
